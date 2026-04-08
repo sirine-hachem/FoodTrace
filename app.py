@@ -592,12 +592,7 @@ def onglet_monitoring():
     </div>
     """, unsafe_allow_html=True)
 
-    # ── Simulation automatique ──
-    if st.session_state.simulation_active:
-        acteurs_liste = list(ACTEURS.keys())
-        acteur = acteurs_liste[st.session_state.compteur_mesures % len(acteurs_liste)]
-        ingerer_mesure(acteur, st.session_state.lot_actif)
-        time.sleep(0.1)
+    
 
     mesures = st.session_state.historique_mesures
 
@@ -744,9 +739,7 @@ def onglet_monitoring():
     st.dataframe(df_table, use_container_width=True, hide_index=True)
 
     # Rechargement auto si simulation active
-    if st.session_state.simulation_active:
-        time.sleep(0.8)
-        st.rerun()
+    
 
 
 def _afficher_architecture():
@@ -1144,15 +1137,9 @@ Nonce (PoW)   : {bloc_selectionne.nonce:,}
 # =============================================================================
 
 def main():
-    """Point d'entrée principal de l'application."""
-
-    # Initialisation de l'état
     initialiser_etat()
-
-    # Sidebar
     afficher_sidebar()
 
-    # Onglets principaux
     tab1, tab2, tab3 = st.tabs([
         "📡  Monitoring Temps Réel",
         "⛓️  Registre Blockchain",
@@ -1161,13 +1148,13 @@ def main():
 
     with tab1:
         onglet_monitoring()
-
     with tab2:
         onglet_blockchain()
-
     with tab3:
         onglet_audit()
 
-
-if __name__ == "__main__":
-    main()
+    # ✅ AJOUTER CES LIGNES ICI — EN DEHORS DES ONGLETS
+    # Le rerun se déclenche peu importe l'onglet actif
+    if st.session_state.simulation_active:
+        time.sleep(0.8)
+        st.rerun()
