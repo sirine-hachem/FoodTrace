@@ -1153,8 +1153,13 @@ def main():
     with tab3:
         onglet_audit()
 
-    # ✅ AJOUTER CES LIGNES ICI — EN DEHORS DES ONGLETS
-    # Le rerun se déclenche peu importe l'onglet actif
+    # ✅ SIMULATION AUTOMATIQUE — fonctionne sur TOUS les onglets
     if st.session_state.simulation_active:
+        acteurs_liste = list(ACTEURS.keys())
+        acteur = acteurs_liste[st.session_state.compteur_mesures % len(acteurs_liste)]
+        ingerer_mesure(acteur, st.session_state.lot_actif)
         time.sleep(0.8)
         st.rerun()
+
+if __name__ == "__main__":
+    main()
